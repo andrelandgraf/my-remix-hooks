@@ -1,5 +1,5 @@
 import { ActionArgs, json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import { addEntry, updateLikes, getAllEntries } from '~/db.server';
 import type { Entry } from '~/types';
 
@@ -86,6 +86,9 @@ function withOrdinal(n: number) {
 
 function MessageForm() {
   const { entries } = useLoaderData<typeof loader>();
+  const data = useActionData();
+  const hasSucceeded = data?.success;
+  const hasFailed = data?.error;
   return (
     <form method="post" action="/message-board" className="w-full flex flex-col items-center justify-center gap-2">
       <div className="text-center">
@@ -103,6 +106,8 @@ function MessageForm() {
       <button type="submit" name="intent" value="new" className="p-2 bg-red-700 text-white font-bold hover:bg-red-600">
         Submit {withOrdinal(entries.length + 1)} message!
       </button>
+      {hasSucceeded && <p className="text-green-700">Message submitted!</p>}
+      {hasFailed && data?.error && <p className="text-red-700">{data.error}</p>}
     </form>
   );
 }
