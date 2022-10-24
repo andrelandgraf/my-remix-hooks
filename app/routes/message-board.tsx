@@ -3,6 +3,17 @@ import { useActionData, useLoaderData } from '@remix-run/react';
 import { addEntry, updateLikes, getAllEntries } from '~/db.server';
 import type { Entry } from '~/types';
 
+/*
+ * TODOs:
+ * - [ ] Show loading indication on message form submit.
+ * - [ ] Reset form on successful submit of message form.
+ * - [ ] Show createdAt as part of each message & access data in a shared component.
+ *   - Hint: We do a nasty casting `as Entry` further down in this file.
+ * - [ ] Hide success message of new message form after 5 seconds.
+ * - [ ] Show error indication on like form submit.
+ *   - Hint: We need to use the `toFormStateData` function in our action handlers.
+ */
+
 async function handleNewMessage(formData: FormData) {
   const name = formData.get('name');
   const message = formData.get('message');

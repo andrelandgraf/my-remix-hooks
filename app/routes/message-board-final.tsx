@@ -59,6 +59,9 @@ function MessageEntry({ entry }: { entry: Entry }) {
   return (
     <li className="w-full max-w-xl flex flex-row items-center justify-center gap-6 bg-gray-300 p-4">
       <div className="flex flex-col gap-1 mr-auto">
+        <p>
+          <small className="text-gray-600 text-sm">{entry.createdAt.toLocaleString()}</small>
+        </p>
         <p>{entry.message}</p>
         <p>
           <small className="text-gray-600 text-sm">By {entry.name}</small>

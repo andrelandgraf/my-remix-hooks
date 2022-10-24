@@ -1,32 +1,11 @@
 {
   "entries": [
     {
-      "id": "3ded58e8-2006-4955-a053-a9aa06159c14",
-      "name": "Andre Landgraf",
-      "message": "This is live!",
-      "likes": 10,
-      "createdAt": "2022-10-24T02:06:57.837Z"
-    },
-    {
-      "id": "5f1e306f-7dc9-45b8-946b-ee765d09157e",
-      "name": "Andre Landgraf",
-      "message": "Wow!",
-      "likes": -7,
-      "createdAt": "2022-10-23T05:41:18.882Z"
-    },
-    {
-      "id": "a12ccee1-1677-46eb-b3f5-55e32229de8e",
-      "name": "sdfsadf",
-      "message": "sadfasd",
-      "likes": -12,
-      "createdAt": "2022-10-23T04:59:43.381Z"
-    },
-    {
-      "id": "5d9fa0af-9927-4b47-b568-577c8321f8a9",
+      "id": "46f6c6ed-6276-4908-bebe-ba682987ff54",
       "name": "Andre Landgraf",
       "message": "Hello World!",
-      "likes": 5,
-      "createdAt": "2022-10-23T03:24:35.273Z"
+      "likes": 0,
+      "createdAt": "2022-10-24T02:23:51.976Z"
     }
   ]
 }
