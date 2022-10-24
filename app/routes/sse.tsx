@@ -14,17 +14,14 @@ import { emitter } from '~/events.server';
 
 export function loader({ request }: LoaderArgs) {
   return eventStream(request, (send) => {
-    console.log('Client connected');
     emitter.addListener(SSEvents.messageCreated, handleMessageCreated);
     emitter.addListener(SSEvents.likesChanged, handleLikesChanged);
 
     function handleMessageCreated(entry: Entry) {
-      console.log('triggered');
       send(SSEvents.messageCreated, JSON.stringify(entry));
     }
 
     function handleLikesChanged(entry: Entry) {
-      console.log('triggered');
       send(SSEvents.messageCreated, JSON.stringify(entry));
     }
 

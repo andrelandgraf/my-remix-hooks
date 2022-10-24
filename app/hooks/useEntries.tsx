@@ -47,7 +47,6 @@ export function useReactiveEntries() {
   }, [entries]);
 
   const handleEntryChange = useCallback((event: MessageEvent) => {
-    console.log(event);
     const entry = deserialize(JSON.parse(event.data));
     invariant(isEntry(entry), 'Expected entry to be an entry');
     setReactiveEntries((entries) => {

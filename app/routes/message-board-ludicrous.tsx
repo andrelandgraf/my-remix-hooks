@@ -141,7 +141,6 @@ function MessageForm() {
 
 export default function MessageBoard() {
   const entries = useReactiveEntries();
-  console.log('render', entries);
   return (
     <main className="w-full flex flex-col items-center justify-center gap-10">
       <div className="mt-10 text-center flex flex-col gap-2">

@@ -17,7 +17,6 @@ export function eventStream(request: Request, init: InitFunction) {
     start(controller) {
       let encoder = new TextEncoder();
       let send = (event: SSEvents, data: string) => {
-        console.log('sent called!');
         controller.enqueue(encoder.encode(`event: ${event}\n`));
         controller.enqueue(encoder.encode(`data: ${data}\n\n`));
       };
