@@ -63,7 +63,7 @@ function MessageEntry({ entry }: { entry: Entry }) {
   return (
     <li className="w-full max-w-xl flex flex-row items-center justify-center gap-6 bg-gray-300 p-4">
       <div className="flex flex-col gap-1 mr-auto">
-        <p>
+        <p className="whitespace-nowrap">
           <small className="text-gray-600 text-sm">{entry.createdAt.toLocaleString()}</small>
         </p>
         <p>{entry.message}</p>
@@ -77,7 +77,7 @@ function MessageEntry({ entry }: { entry: Entry }) {
         </button>
         <div>
           <input type="hidden" name="id" value={entry.id} />
-          <p>{hasFailed ? '❗ failed' : `${entry.likes} likes`}</p>
+          <p className="whitespace-nowrap">{hasFailed ? '❗ failed' : `${entry.likes} likes`}</p>
         </div>
         <button type="submit" name="intent" value="downVote">
           ⬇️

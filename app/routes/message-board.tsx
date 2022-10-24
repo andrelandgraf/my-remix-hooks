@@ -76,7 +76,7 @@ function MessageEntry({ entry }: { entry: Entry }) {
         </button>
         <div>
           <input type="hidden" name="id" value={entry.id} />
-          <p>{entry.likes} likes</p>
+          <p className="whitespace-nowrap">{entry.likes} likes</p>
         </div>
         <button type="submit" name="intent" value="downVote">
           ⬇️

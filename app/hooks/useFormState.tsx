@@ -1,7 +1,7 @@
-import type { Fetcher } from '@remix-run/react';
+import { Fetcher, useFetcher } from '@remix-run/react';
 import { useActionData } from '@remix-run/react';
 import { useTransition } from '@remix-run/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type FormStateData = {
   form: {
@@ -12,25 +12,41 @@ export type FormStateData = {
 
 type FormState = 'idle' | 'submitting' | 'succeeded' | 'failed';
 
-/**
- * Global transition state of the app
- * @param resetMs How long to wait before resetting the form state to idle
- */
-export function useFormState(resetMs: number | 'never' = 5000) {
-  const transition = useTransition();
-  const data = useActionData<FormStateData>();
-  const initState =
-    transition.state === 'submitting'
-      ? 'submitting'
-      : transition.state === 'idle' && data?.form.state === 'error'
-      ? 'failed'
-      : transition.state === 'idle' && data?.form.state === 'success'
-      ? 'succeeded'
-      : 'idle';
+type TransitionState = ReturnType<typeof useTransition>['state'] | ReturnType<typeof useFetcher>['state'];
+type TransitionType = ReturnType<typeof useTransition>['type'] | ReturnType<typeof useFetcher>['type'];
+
+function getFormState(
+  transitionState: TransitionState,
+  transitionType: TransitionType,
+  actionData: FormStateData | undefined,
+): FormState {
+  return transitionState === 'submitting' || (transitionState === 'loading' && transitionType === 'actionReload')
+    ? 'submitting'
+    : transitionState === 'idle' && actionData?.form.state === 'error'
+    ? 'failed'
+    : transitionState === 'idle' && actionData?.form.state === 'success'
+    ? 'succeeded'
+    : 'idle';
+}
+
+function useStateHelper(
+  transitionState: TransitionState,
+  transitionType: TransitionType,
+  actionData: FormStateData | undefined,
+  resetMs: number | 'never' = 5000,
+) {
+  const initState = getFormState(transitionState, transitionType, actionData);
   const [state, setState] = useState<FormState>(initState);
 
   /**
-   * useEffect only to set timeout to reset the form state to idle
+   * useEffect to sync transition state with local state
+   */
+  useEffect(() => {
+    setState(getFormState(transitionState, transitionType, actionData));
+  }, [transitionState, transitionType, actionData]);
+
+  /**
+   * useEffect to set timeout to reset the form state to idle
    * (enhance the experience with JavaScript)
    */
   useEffect(() => {
@@ -45,11 +61,20 @@ export function useFormState(resetMs: number | 'never' = 5000) {
 
   return {
     state,
-    isLoading: transition.state === 'submitting' || transition.state === 'loading',
     isSubmitting: state === 'submitting',
     hasSucceeded: state === 'succeeded',
     hasFailed: state === 'failed',
   };
+}
+
+/**
+ * Global transition state of the app
+ * @param resetMs How long to wait before resetting the form state to idle
+ */
+export function useFormState(resetMs: number | 'never' = 5000) {
+  const transition = useTransition();
+  const data = useActionData<FormStateData>();
+  return useStateHelper(transition.state, transition.type, data, resetMs);
 }
 
 /**
@@ -58,37 +83,7 @@ export function useFormState(resetMs: number | 'never' = 5000) {
  * @param resetMs How long to wait before resetting the form state to idle
  */
 export function useFetcherState(fetcher: Fetcher<FormStateData>, resetMs: number | 'never' = 5000) {
-  const initState =
-    fetcher.state === 'submitting'
-      ? 'submitting'
-      : fetcher.state === 'idle' && fetcher.data?.form.state === 'error'
-      ? 'failed'
-      : fetcher.state === 'idle' && fetcher.data?.form.state === 'success'
-      ? 'succeeded'
-      : 'idle';
-  const [state, setState] = useState<FormState>(initState);
-
-  /**
-   * useEffect only to set timeout to reset the form state to idle
-   * (enhance the experience with JavaScript)
-   */
-  useEffect(() => {
-    let timeout: number;
-    if (resetMs !== 'never' && state === 'succeeded') {
-      timeout = window.setTimeout(() => setState('idle'), resetMs);
-    }
-    return () => {
-      window.clearTimeout(timeout);
-    };
-  }, [state, resetMs]);
-
-  return {
-    state,
-    isLoading: fetcher.state === 'submitting' || fetcher.state === 'loading',
-    isSubmitting: state === 'submitting',
-    hasSucceeded: state === 'succeeded',
-    hasFailed: state === 'failed',
-  };
+  return useStateHelper(fetcher.state, fetcher.type, fetcher.data, resetMs);
 }
 
 export function toFormStateData(errorMessage?: string): FormStateData {

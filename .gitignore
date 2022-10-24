@@ -6,3 +6,5 @@ node_modules
 .env
 
 /app/styles/tailwind.css
+
+.DS_STORE
