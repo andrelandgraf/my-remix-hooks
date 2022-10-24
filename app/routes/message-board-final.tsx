@@ -135,7 +135,7 @@ function MessageForm() {
   );
 }
 
-export default function Index() {
+export default function MessageBoard() {
   const entries = useEntries();
   return (
     <main className="w-full flex flex-col items-center justify-center gap-10">

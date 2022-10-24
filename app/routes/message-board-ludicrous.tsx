@@ -139,7 +139,7 @@ function MessageForm() {
   );
 }
 
-export default function Index() {
+export default function MessageBoard() {
   const entries = useReactiveEntries();
   console.log('render', entries);
   return (
