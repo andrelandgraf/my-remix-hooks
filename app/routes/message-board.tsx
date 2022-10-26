@@ -1,6 +1,7 @@
 import { ActionArgs, json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import { addEntry, updateLikes, getAllEntries } from '~/db.server';
+import { toFormStateData } from '~/hooks/useFormState';
 import type { Entry } from '~/types';
 
 /*
@@ -18,26 +19,26 @@ async function handleNewMessage(formData: FormData) {
   const name = formData.get('name');
   const message = formData.get('message');
   if (!name || !message || typeof name !== 'string' || typeof message !== 'string') {
-    return json({ error: 'Please fill out all fields' }, { status: 400 });
+    return json(toFormStateData('Please fill out all fields'), { status: 400 });
   }
   try {
     await addEntry(name, message);
-    return json({ success: true });
+    return json(toFormStateData());
   } catch (error) {
-    return json({ error: error?.toString() || 'Something went wrong' }, { status: 500 });
+    return json(toFormStateData(error?.toString() || 'Something went wrong'), { status: 500 });
   }
 }
 
 async function handleUpdateLikesBy(formData: FormData, byValue: number) {
   const id = formData.get('id');
   if (!id || typeof id !== 'string') {
-    return json({ error: 'Ups, something went wrong! No Id.' }, { status: 500 });
+    return json(toFormStateData('Ups, something went wrong! No Id.'), { status: 500 });
   }
   try {
     await updateLikes(id, byValue);
-    return json({ success: true });
+    return json(toFormStateData());
   } catch (error) {
-    return json({ error: error?.toString() || 'Something went wrong' }, { status: 500 });
+    return json(toFormStateData(error?.toString() || 'Something went wrong'), { status: 500 });
   }
 }
 
@@ -53,7 +54,7 @@ export async function action({ request }: ActionArgs) {
   if (intent === 'downVote') {
     return handleUpdateLikesBy(formData, -1);
   }
-  return json({ error: 'Ups, something went wrong! Unknown intent.' }, { status: 500 });
+  return json(toFormStateData('Ups, something went wrong! Unknown intent.'), { status: 500 });
 }
 
 export async function loader() {
@@ -98,8 +99,8 @@ function withOrdinal(n: number) {
 function MessageForm() {
   const { entries } = useLoaderData<typeof loader>();
   const data = useActionData();
-  const hasSucceeded = data?.success;
-  const hasFailed = data?.error;
+  const hasSucceeded = data?.form.state === 'success';
+  const hasFailed = data?.form.state === 'error';
   return (
     <form method="post" action="/message-board" className="w-full flex flex-col items-center justify-center gap-2">
       <div className="text-center">
@@ -118,7 +119,7 @@ function MessageForm() {
         Submit {withOrdinal(entries.length + 1)} message!
       </button>
       {hasSucceeded && <p className="text-green-700">Message submitted!</p>}
-      {hasFailed && data?.error && <p className="text-red-700">{data.error}</p>}
+      {hasFailed && data?.form.error && <p className="text-red-700">{data.form.error}</p>}
     </form>
   );
 }
