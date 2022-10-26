@@ -152,8 +152,8 @@ export default function MessageBoard() {
         </section>
         <section className="w-full flex flex-col items-center justify-center gap-4">
           <div className="text-center">
-            <h2 className="text-2xl">Add a message</h2>
-            <p>Please leave a message and say hi!</p>
+            <h2 className="text-2xl">All Messages</h2>
+            <p>Messages from cool people!</p>
           </div>
           <ul className="w-full flex flex-col items-center justify-center gap-2">
             {entries.map((entry) => (

@@ -12,7 +12,6 @@ import type { Entry } from '~/types';
  *   - Hint: We do a nasty casting `as Entry` further down in this file.
  * - [ ] Hide success message of new message form after 5 seconds.
  * - [ ] Show error indication on like form submit.
- *   - Hint: We need to use the `toFormStateData` function in our action handlers.
  */
 
 async function handleNewMessage(formData: FormData) {
@@ -138,8 +137,8 @@ export default function MessageBoard() {
         </section>
         <section className="w-full flex flex-col items-center justify-center gap-4">
           <div className="text-center">
-            <h2 className="text-2xl">Add a message</h2>
-            <p>Please leave a message and say hi!</p>
+            <h2 className="text-2xl">All Messages</h2>
+            <p>Messages from cool people!</p>
           </div>
           <ul className="w-full flex flex-col items-center justify-center gap-2">
             {entries.map((entry) => (
